@@ -16,7 +16,19 @@ Edit rai_service_spec.yaml file by changing the locations of the rai-server and 
 Edit one_time/add_yaml_file.sql by replacing the physical location of the yaml file:
 
 	put file:///Users/max/demo/rai_service_spec.yaml 
-		
+	
+	
+Docker Commands:
+
+	docker pull maxdemarzi/rai-server:latest
+	docker pull maxdemarzi/rai-proxy:latest 
+
+	docker tag maxdemarzi/rai-server:latest xxxxxxx.registry.snowflakecomputing.com/demo/data_schema/demo_repository/rai-server:latest
+	docker tag maxdemarzi/rai-proxy:latest xxxxxxx.registry.snowflakecomputing.com/demo/data_schema/demo_repository/rai-proxy:latest
+
+	docker push xxxxxxx.registry.snowflakecomputing.com/demo/data_schema/demo_repository/rai-server:latest
+	docker push xxxxxxx.registry.snowflakecomputing.com/demo/data_schema/demo_repository/rai-proxy:latest
+			
 
 Steps:
 
