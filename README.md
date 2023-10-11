@@ -4,6 +4,10 @@ Relational AI and Snowflake Container Services Demo
 
 ### Instructions:
 
+
+Follow along with the snowpark containers [tutorial 1](https://docs.snowflake.com/en/LIMITEDACCESS/snowpark-containers/tutorials/tutorial-1), altering the instructions to use the RAI images.
+
+
 Edit rai_service_spec.yaml file by changing the locations of the rai-server and rai-proxy docker image locations:
 
 	xxxxx-xxxxx-snowservices.registry.snowflakecomputing.com/rai_repository/rai-server:release
