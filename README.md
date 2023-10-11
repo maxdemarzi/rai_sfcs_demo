@@ -20,11 +20,19 @@ Edit one_time/add_yaml_file.sql by replacing the physical location of the yaml f
 	
 Docker Commands:
 
+You can use the SHOW IMAGE REPOSITORIES SQL command to get the repository URL, use that instead of xxxxxxx.registry.snowflakecomputing.com/demo/data_schema/demo_repository/
+
 	docker pull maxdemarzi/rai-server:latest
 	docker pull maxdemarzi/rai-proxy:latest 
 
 	docker tag maxdemarzi/rai-server:latest xxxxxxx.registry.snowflakecomputing.com/demo/data_schema/demo_repository/rai-server:latest
 	docker tag maxdemarzi/rai-proxy:latest xxxxxxx.registry.snowflakecomputing.com/demo/data_schema/demo_repository/rai-proxy:latest
+
+Login to the docker registry (modify registry url and Snowflake username):
+
+	docker login xxxxxxx.registry.snowflakecomputing.com -u <username>
+
+Push the images:
 
 	docker push xxxxxxx.registry.snowflakecomputing.com/demo/data_schema/demo_repository/rai-server:latest
 	docker push xxxxxxx.registry.snowflakecomputing.com/demo/data_schema/demo_repository/rai-proxy:latest
@@ -34,7 +42,7 @@ Steps:
 
 1. Go through the example setup.sql and see if you still need to run any variations of these commands.
 2. After modifying the yaml file, edit and run the one_time/add_yaml_file.sql
-3. In the one_time directory create the pools, service, graph and partitioned graph.
+3. In the one_time directory create the pools, service, functions, graph and partitioned graph.
 4. In the as_needed directory, run the ping command to see it is working.
 5. In the graph_analytics directory, run the test query.
 6. Run the load graph command, then count of edges, pagerank and connected components.
