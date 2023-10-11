@@ -1,0 +1,31 @@
+# One yaml file for the two RAI containers, run as a single service:
+# The RAI Engine Server:
+spec:
+  container:
+  - name: rai-server
+    image: xxxxx-xxxxx-snowservices.registry.snowflakecomputing.com/rai_repository/rai-server:release
+    env:
+      SERVER_PORT: 8010
+      JULIA_NUM_THREADS: 5
+# --------
+# The Proxy Server:
+# The proxy must know the name of the RAI engine/server service
+# The Snowflake account info, including the warehouse, is needed for SF->RAI data copy to work
+  - name: rai-proxy
+    image: xxxxx-xxxxx-snowservices.registry.snowflakecomputing.com/rai_repository/rai-proxy:release
+    env:
+       ENGINE: localhost:8010
+       SNOWFLAKE_ACCOUNT: XXXXXXX
+       SNOWFLAKE_DATABASE: DEMO_DATABASE
+       SNOWFLAKE_SCHEMA: TPCDS
+       SNOWFLAKE_ROLE: DEMO_ROLE
+       SNOWFLAKE_WAREHOUSE: DEMO_WAREHOUSE
+# -------
+  endpoint:
+    - name: proxyendpoint
+      port: 8080
+      public: false
+    - name: serverendpoint
+      port: 8010
+      public: false
+

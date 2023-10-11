@@ -1,0 +1,27 @@
+show services;
+
+-- create service rai_service
+--     min_instances=1
+--     max_instances=1
+--     compute_pool=COMPUTE_POOL_STANDARD_2
+--     spec=@rai_yaml_stage/rai_service_spec.yaml;
+    
+create service rai_service
+    min_instances=1
+    max_instances=1
+    compute_pool=COMPUTE_POOL_STANDARD_5
+    spec=@rai_yaml_stage/rai_service_spec.yaml;
+    
+-- create service rai_service
+--     min_instances=1
+--     max_instances=1
+--     compute_pool=COMPUTE_POOL_HIGH_2
+--     spec=@rai_yaml_stage/rai_service_spec.yaml;
+
+-- create service rai_service
+--     min_instances=1
+--     max_instances=1
+--     compute_pool=COMPUTE_POOL_HIGH_5
+--     spec=@rai_yaml_stage/rai_service_spec.yaml;
+
+show services;

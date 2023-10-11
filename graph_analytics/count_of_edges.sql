@@ -1,0 +1,1 @@
+select RAI_QUERY('demo', 'def output= count[edge:id]');
