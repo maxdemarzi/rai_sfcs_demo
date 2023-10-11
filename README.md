@@ -17,3 +17,7 @@ Edit one_time/add_yaml_file.sql by replacing the physical location of the yaml f
 
 	put file:///Users/max/demo/rai_service_spec.yaml 
 		
+
+Worksheets should look something like this:
+
+![Snowflake Worksheets](worksheets.png)
