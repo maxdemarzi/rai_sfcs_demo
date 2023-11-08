@@ -107,6 +107,18 @@ $$
   SELECT EXEC(DATABASE, LOAD_MODEL_CODE_QUERY(NAME, code), NULL, FALSE)
 $$;
 
+-- helper functions to fetch an s3 storage location 
+CREATE OR REPLACE FUNCTION get_storage_location()
+RETURNS VARCHAR
+LANGUAGE SQL
+AS
+$$
+    SELECT 's3://'||$1:BucketName||'/'||$1:Prefix
+    FROM @rai_yaml_stage/token/s3-creds.json (file_format => 'json')
+    LIMIT 1
+$$;
+
+
 // TODO: a DELETE_MODEL, DELETE_RELATION?
 
 /*

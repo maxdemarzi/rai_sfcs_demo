@@ -1,12 +1,31 @@
-# One yaml file for the two RAI containers, run as a single service:
-# The RAI Engine Server:
+# One yaml file for the four RAI containers, run as a single service:
 spec:
   container:
+  # Support for the RAI Engine:
+  - name: consul
+     image: xxxxx-xxxxx-snowservices.registry.snowflakecomputing.com/rai_repository/hashicorp/consul:amd-1.16"
+     args: ["agent", "-server", "-bootstrap", "-ui", "-client=0.0.0.0"]
+  - name: token-svc
+      image: " xxxxx-xxxxx-snowservices.registry.snowflakecomputing.com/rai_repository/snowflake-helper:release"
+      command: ["/token-updater"]
+      volumeMounts:
+        - name: shared-stage
+          mountPath: /sts-token
+      env:
+        STAGENAME: "rai_yaml_stage"
+# The RAI Engine Server:
   - name: rai-server
     image: xxxxx-xxxxx-snowservices.registry.snowflakecomputing.com/rai_repository/rai-server:release
+    args: ["rai-server", "server" ,"--config-file", "/mount/shared-stage/engineconfig.yaml"]
     env:
       SERVER_PORT: 8010
       JULIA_NUM_THREADS: 5
+      CONSUL_ADDRESS: http://rai-service.scratch.sulli-db.snowflakecomputing.internal:8500
+    volumeMounts:
+      - name: shared-stage
+        mountPath: /mount/shared-stage
+      - name: token-stage
+        mountPath: /mount/token-stage/token
 # --------
 # The Proxy Server:
 # The proxy must know the name of the RAI engine/server service
@@ -28,4 +47,15 @@ spec:
     - name: serverendpoint
       port: 8010
       public: false
-
+    - name: consul
+      port: 8500
+      public: true
+  volumes:
+    - name: token-stage
+      source: @rai_yaml_stage/token
+      uid: 1000
+      gid: 1000
+    - name: shared-stage
+      source: @rai_yaml_stage/config
+      uid: 1000
+      gid: 1000

@@ -1,16 +1,33 @@
 // Computes PageRank for every node in the graph, outputs the highest 100 scores and node ids
 
-CREATE OR REPLACE FUNCTION HIGHEST_PAGERANK_QUERY() RETURNS STRING LANGUAGE JAVASCRIPT AS
+CREATE OR REPLACE FUNCTION HIGHEST_PAGERANK_QUERY(export_path string) RETURNS STRING LANGUAGE JAVASCRIPT AS
 $$
   return `
 def my_edge(x,y) = edge:source(i, x) and edge:destination(i,y) from i 
 def my_graph = undirected_graph[my_edge]
 @inline def my_graphlib = rel:graphlib[my_graph]
 
-def output = bottom[100,{score, node : my_graphlib:pagerank(node, score)}]
+def data = bottom[100,{score, node : my_graphlib:pagerank(node, score)}]
+
+@inline
+module config
+  def syntax:header = {(1: a); (2,b)}
+	def partition_size = 200, exists(data)
+	def compression = "gzip"
+  def path = `||export_path||`/export/batch
+	module integration
+		def provider = "aws"
+	end
+end
+def export = export_csv[config]
 `;
 $$;
 
 
 // Execute a Rel transaction on the given database, and insert results into the given target table.
-select EXEC_INTO('demo', 'highest_pagerank_results', highest_pagerank_query());
+-- select EXEC_INTO('demo', 'highest_pagerank_results', highest_pagerank_query(get_storage_location()));
+
+//execute the rel transaction which exports the results to the given path
+select EXEC( 'demo', highest_pagerank_query(get_storage_location()));
+
+COPY INTO highest_pagerank_results FROM '@rai_yaml_stage/export/' FILE_FORMAT = (TYPE = 'CSV' SKIP_HEADER=1)
