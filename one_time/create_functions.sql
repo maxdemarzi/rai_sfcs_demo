@@ -108,6 +108,7 @@ $$
 $$;
 
 -- helper functions to fetch an s3 storage location 
+CREATE FILE FORMAT json type = 'json';
 CREATE OR REPLACE FUNCTION get_storage_location()
 RETURNS VARCHAR
 LANGUAGE SQL

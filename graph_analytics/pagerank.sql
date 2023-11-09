@@ -7,16 +7,24 @@ def my_edge(x,y) = edge:source(i, x) and edge:destination(i,y) from i
 def my_graph = undirected_graph[my_edge]
 @inline def my_graphlib = rel:graphlib[my_graph]
 
-def data = bottom[100,{score, node : my_graphlib:pagerank(node, score)}]
+def results = bottom[100,{score, node : my_graphlib:pagerank(node, score)}]
+def output = "ok"
+
+def csv_results(colname, row, val) {
+    ( colname = :SCORE, results(row, val, _) )
+    or
+    ( colname = :NODEID, results(row, _, val) )
+}
 
 @inline
 module config
-  def syntax:header = {(1: a); (2,b)}
-	def partition_size = 200, exists(data)
-	def compression = "gzip"
-  def path = `||export_path||`/export/batch
+  def data = csv_results
+  def partition_size = 200, exists(data)
+
+  def path = "${EXPORT_PATH}export/results.csv"
 	module integration
-		def provider = "aws"
+        def region = "us-west-2"
+		def provider = "s3"
 	end
 end
 def export = export_csv[config]
@@ -25,6 +33,7 @@ $$;
 
 
 // Execute a Rel transaction on the given database, and insert results into the given target table.
+// uses sql inserts and updates to insert the results into the target table
 -- select EXEC_INTO('demo', 'highest_pagerank_results', highest_pagerank_query(get_storage_location()));
 
 //execute the rel transaction which exports the results to the given path
