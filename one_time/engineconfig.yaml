@@ -14,10 +14,10 @@ pager:
 parallelism:
 dbcache:
 observability:
-  tracing: null
-  span_threshold_sec: null
-  profile:
-  verbosity:
+  tracing: "datadog"
+  span-threshold-sec: 0.1
+  default-tracing-verbosity: 0
+  default-log-verbosity: 1
 parallelism:
   leaf-nodes: null
   leaf-nodes-lookup: null

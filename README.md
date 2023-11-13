@@ -10,20 +10,23 @@ Follow along with the snowpark containers [tutorial 1](https://docs.snowflake.co
 
 Edit rai_service_spec.yaml file by changing the locations of the rai-server and rai-proxy docker image locations:
 
-	xxxxx-xxxxx-snowservices.registry.snowflakecomputing.com/rai_repository/rai-server:release
+	<db>/<schema>/rai_repository/rai-server:release
 	xxxxx-xxxxx-snowservices.registry.snowflakecomputing.com/rai_repository/rai-proxy:release
 	
-Edit one_time/add_yaml_file.sql by replacing the physical location of the yaml file:
+Edit one_time/add_yaml_file.sql by replacing the physical location of the yaml files:
 
 	put file:///Users/max/demo/rai_service_spec.yaml 
 	
-	
+
+Edit the one_time/create_service to include the provided api key in the secret
+	PASSWORD = "xxx"
+
 Docker Commands:
 
 You can use the SHOW IMAGE REPOSITORIES SQL command to get the repository URL, use that instead of xxxxxxx.registry.snowflakecomputing.com/demo/data_schema/demo_repository/
 
 	docker pull maxdemarzi/rai-server:latest
-	docker pull maxdemarzi/rai-proxy:latest 
+	docker pull maxdemarzi/rai-proxy:latest
 
 	docker tag maxdemarzi/rai-server:latest xxxxxxx.registry.snowflakecomputing.com/demo/data_schema/demo_repository/rai-server:latest
 	docker tag maxdemarzi/rai-proxy:latest xxxxxxx.registry.snowflakecomputing.com/demo/data_schema/demo_repository/rai-proxy:latest
