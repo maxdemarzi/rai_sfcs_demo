@@ -11,7 +11,6 @@ pager:
     temp_token_path: "/mount/token-stage/s3-creds.json"
     bucket: "pager"
     prefix: ""
-parallelism:
 dbcache:
 observability:
   tracing: "datadog"
