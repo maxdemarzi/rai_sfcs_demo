@@ -3,38 +3,39 @@ spec:
   container:
   # Support for the RAI Engine:
   - name: consul
-     image: /demo_database/tpcds/rai_repository/hashicorp/consul:amd-1.16
-     args: ["agent", "-server", "-bootstrap", "-ui", "-client=0.0.0.0", "-data-dir", "/consul-data/consul/data"]
-     volumeMounts:
-     - name: consul-mount
-       mountPath: /consul-data/   
+    image: /<db>/<schema>/cashapp_repository/consul:amd-1.16
+    args: ["agent", "-server", "-bootstrap", "-ui", "-client=0.0.0.0", "-data-dir", "/consul-data/consul/data"]
+    volumeMounts:
+    - name: consul-mount
+      mountPath: /consul-data/
+  # enables direct s3 access on SF stages
   - name: token-svc
-      image: /demo_database/tpcds/rai_repository/snowflake-helper:release
-      command: ["/token-updater"]
-      volumeMounts:
-        - name: token-stage
-          mountPath: /sts-token
-      env:
-        STAGENAME: "rai_yaml_stage"
+    image: /<db>/<schema>/cashapp_repository/snowflake-helper:release
+    command: ["/token-updater"]
+    volumeMounts:
+      - name: token-stage
+        mountPath: /sts-token
+    env:
+      STAGENAME: "rai_yaml_stage"
 # The RAI Engine Server:
   - name: rai-server
-    image:/demo_database/tpcds/rai_repository/rai-server:release
+    image: /<db>/<schema>/cashapp_repository/rai-server:s3
     args: ["rai-server", "server" ,"--config-file", "/mount/shared-stage/engineconfig.yaml"]
     env:
       SERVER_PORT: 8010
       JULIA_NUM_THREADS: 5
-      CONSUL_ADDRESS: http://rai-service.tpcds.demo-database.snowflakecomputing.internal:8500
+      CONSUL_ADDRESS: http://rai-service:8500
     volumeMounts:
       - name: shared-stage
         mountPath: /mount/shared-stage
       - name: token-stage
-        mountPath: /mount/token-stage/token
+        mountPath: /mount/token-stage
 # --------
 # The Proxy Server:
 # The proxy must know the name of the RAI engine/server service
 # The Snowflake account info, including the warehouse, is needed for SF->RAI data copy to work
   - name: rai-proxy
-    image: /demo_database/tpcds/rai_repository/rai-proxy:release
+    image:  /<db>/<schema>/cashapp_repository/rai-proxy:release
     env:
        ENGINE: localhost:8010
        SNOWFLAKE_ACCOUNT: XXXXXXX

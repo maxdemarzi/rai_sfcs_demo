@@ -50,3 +50,19 @@ Steps:
 Worksheets should look something like this:
 
 ![Snowflake Worksheets](worksheets.png)
+
+
+### Troublshooting:
+
+Show service status
+```sql 
+SELECT SYSTEM$GET_SERVICE_STATUS('rai_service',0);
+```
+
+Show container status :
+```sql 
+CALL SYSTEM$GET_SERVICE_LOGS('<db>.<schema>.<container>', '0', 'rai-server', 100);
+
+e.g.
+CALL SYSTEM$GET_SERVICE_LOGS('demo_database.tpcds.rai-server', '0', 'rai-server', 100);
+```

@@ -14,6 +14,8 @@ def csv_results(colname, row, val) {
     ( colname = :SCORE, results(row, val, _) )
     or
     ( colname = :NODEID, results(row, _, val) )
+    or
+    ( colname = :ROWID,  results(row, _, _) and row = val )
 }
 
 @inline
