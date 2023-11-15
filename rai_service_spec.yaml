@@ -3,7 +3,7 @@ spec:
   container:
   # telemetry config
   - name: dd-agent
-    image: /cashapp/tpcds5/cashapp_repository/dd-agent:7.38.1
+    image: /<db>/<schema>/cashapp_repository/dd-agent:7.38.1
     env:
       DD_TAGS: env:spcs-cashapp
       DD_ENV: spcs-cashapp
@@ -21,14 +21,14 @@ spec:
         envVarName: DD_API_KEY
   # Support for the RAI Engine:
   - name: consul
-    image: /cashapp/tpcds5/cashapp_repository/consul:amd-1.16
+    image: /<db>/<schema>/cashapp_repository/consul:amd-1.16
     args: ["agent", "-server", "-bootstrap", "-ui", "-client=0.0.0.0", "-data-dir", "/consul-data/consul/data"]
     volumeMounts:
     - name: consul-mount
       mountPath: /consul-data/
   # enables direct s3 access on SF stages
   - name: token-svc
-    image: /cashapp/tpcds5/cashapp_repository/snowflake-helper:release
+    image: /<db>/<schema>/cashapp_repository/snowflake-helper:release
     command: ["/token-updater"]
     volumeMounts:
       - name: token-stage
@@ -37,7 +37,7 @@ spec:
       STAGENAME: "rai_yaml_stage"
 # The RAI Engine Server:
   - name: rai-server
-    image: /cashapp/tpcds5/cashapp_repository/rai-server:latest
+    image: /<db>/<schema>/cashapp_repository/rai-server:latest
     args: [
       "bash","-c",
       "sleep 10; socat PIPE:/tmp/pipe,unlink-early TCP:localhost:10518 & rai-server server --config-file /mount/shared-stage/engineconfig.yaml 2>&1 | tee -a /tmp/pipe",
@@ -56,7 +56,7 @@ spec:
 # The proxy must know the name of the RAI engine/server service
 # The Snowflake account info, including the warehouse, is needed for SF->RAI data copy to work
   - name: rai-proxy
-    image:  /cashapp/tpcds5/cashapp_repository/rai-proxy:latest
+    image:  /<db>/<schema>/cashapp_repository/rai-proxy:latest
     env:
        ENGINE: localhost:8010
        SNOWFLAKE_ACCOUNT: XXXXXXX
