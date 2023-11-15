@@ -42,7 +42,6 @@ You can use the SHOW IMAGE REPOSITORIES SQL command to get the repository URL, u
 
 
 
-
 Login to the docker registry (modify registry url and Snowflake username):
 
 	docker login xxxxxxx.registry.snowflakecomputing.com -u <username>
@@ -82,6 +81,10 @@ Upload a config file to the service:
 	PUT file:///Users/max/demo/one_time/ddconfig.yaml @rai_yaml_stage/datadog auto_compress=false overwrite=true;
 
 ### Troublshooting:
+
+There is a 10 second delay for the rai-service to be available, you will see this message until its ready:
+	
+	"Post \"http://localhost:8010/transactions\": dial tcp [::1]:8010: connect: connection refused"
 
 Show service status
 ```sql 
