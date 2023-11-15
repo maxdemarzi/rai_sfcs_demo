@@ -59,8 +59,10 @@ spec:
     image:  /cashapp/tpcds5/cashapp_repository/rai-proxy:latest
     env:
        ENGINE: localhost:8010
- 
-
+       SNOWFLAKE_DATABASE: DEMO_DATABASE
+       SNOWFLAKE_SCHEMA: TPCDS
+       SNOWFLAKE_ROLE: DEMO_ROLE
+       SNOWFLAKE_WAREHOUSE: DEMO_WAREHOUSE
 # -------
   endpoint:
     - name: proxyendpoint
