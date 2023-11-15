@@ -1,5 +1,0 @@
-logs:
-- type: file
-  path: "/mount/logs/engine.log"
-  service: "rai-server"
-  source: "rai-server"

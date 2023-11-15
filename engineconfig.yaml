@@ -13,7 +13,8 @@ pager:
     prefix: ""
 dbcache:
 observability:
-  tracing: "datadog"
+  tracing: datadog
+  log-format: json
   span-threshold-sec: 0.1
   default-tracing-verbosity: 0
   default-log-verbosity: 1

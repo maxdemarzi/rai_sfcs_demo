@@ -22,7 +22,6 @@ def csv_results(colname, row, val) {
 module config
   def data = csv_results
   def partition_size = 200, exists(data)
-
   def path = "${EXPORT_PATH}export/results.csv"
 	module integration
         def region = "us-west-2"
@@ -38,7 +37,17 @@ $$;
 // uses sql inserts and updates to insert the results into the target table
 -- select EXEC_INTO('demo', 'highest_pagerank_results', highest_pagerank_query(get_storage_location()));
 
-//execute the rel transaction which exports the results to the given path
-select EXEC( 'demo', highest_pagerank_query(get_storage_location()));
 
-COPY INTO highest_pagerank_results FROM '@rai_yaml_stage/export/' FILE_FORMAT = (TYPE = 'CSV' SKIP_HEADER=1)
+
+//execute the rel transaction which exports the results to the given path
+-- create the target table
+create or replace TABLE highest_pagerank_results (
+	nodeid NUMBER(38,0),
+    rowid NUMBER(38,0),
+	score NUMBER(38,12)
+);
+--  run the algorithm, and export results to the given path
+select EXEC( 'demo', highest_pagerank_query(get_storage_location('max/page-rank')));
+
+-- load the results into the target table
+COPY INTO highest_pagerank_results FROM '@rai_yaml_stage/max/page-rank/' FILE_FORMAT = (TYPE = 'CSV' SKIP_HEADER=0)

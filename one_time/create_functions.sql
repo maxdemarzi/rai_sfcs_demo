@@ -108,13 +108,13 @@ $$
 $$;
 
 -- helper functions to fetch an s3 storage location 
-CREATE FILE FORMAT json type = 'json';
-CREATE OR REPLACE FUNCTION get_storage_location()
+CREATE FILE FORMAT if not exists json type = 'json';
+CREATE OR REPLACE FUNCTION get_storage_location(relative_path string)
 RETURNS VARCHAR
 LANGUAGE SQL
 AS
 $$
-    SELECT 's3://'||$1:BucketName||'/'||$1:Prefix
+    SELECT 's3://'||$1:BucketName||'/'||$1:Prefix||'/'||$relative_path
     FROM @rai_yaml_stage/token/s3-creds.json (file_format => 'json')
     LIMIT 1
 $$;
