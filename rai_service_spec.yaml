@@ -77,7 +77,7 @@ spec:
       public: false
     - name: consul
       port: 8500
-      public: true
+      public: false
   volumes:
     - name: token-stage
       source: '@rai_yaml_stage/token'
