@@ -1,6 +1,6 @@
 // Computes PageRank for every node in the graph, outputs the highest 100 scores and node ids
 
-CREATE OR REPLACE FUNCTION HIGHEST_PAGERANK_QUERY(export_path string) RETURNS STRING LANGUAGE JAVASCRIPT AS
+CREATE OR REPLACE FUNCTION HIGHEST_PAGERANK_QUERY(export_path varchar) RETURNS STRING LANGUAGE JAVASCRIPT AS
 $$
   return `
 def my_edge(x,y) = edge:source(i, x) and edge:destination(i,y) from i 
@@ -16,13 +16,15 @@ def csv_results(colname, row, val) {
     ( colname = :NODEID, results(row, _, val) )
     or
     ( colname = :ROWID,  results(row, _, _) and row = val )
+   
 }
 
 @inline
 module config
   def data = csv_results
   def partition_size = 200, exists(data)
-  def path = "${EXPORT_PATH}export/results.csv"
+
+  def path = "${EXPORT_PATH}/results.csv"
 	module integration
         def region = "us-west-2"
 		def provider = "s3"
