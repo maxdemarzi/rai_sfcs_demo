@@ -1,6 +1,6 @@
 show services;
 
--- this objecr required to run the service, however data collecftion is disabled by default
+-- this object required to run the service, however data collection is disabled by default
 create or replace secret dd_api_key
 TYPE = PASSWORD
 PASSWORD = "disabled"
