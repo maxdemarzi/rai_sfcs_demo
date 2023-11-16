@@ -25,6 +25,7 @@ Edit one_time/add_yaml_file.sql by replacing the physical location of the yaml f
 Docker Commands:
 
 You can use the SHOW IMAGE REPOSITORIES SQL command to get the repository URL, use that instead of xxxxxxx.registry.snowflakecomputing.com/demo/data_schema/demo_repository/
+
 	# pull the images
 	docker pull maxdemarzi/consul:amd-1.16
 	docker pull maxdemarzi/snowflake-helper:release
