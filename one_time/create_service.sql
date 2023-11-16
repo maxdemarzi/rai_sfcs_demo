@@ -1,5 +1,13 @@
 show services;
 
+-- this objecr required to run the service, however data collecftion is disabled by default
+create or replace secret dd_api_key
+TYPE = PASSWORD
+PASSWORD = "disabled"
+USERNAME = "DD-AGENT";
+grant read on secret dd_api_key to role demo_role;
+
+
 -- create service rai_service
 --     min_instances=1
 --     max_instances=1

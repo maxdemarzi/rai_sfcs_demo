@@ -1,0 +1,25 @@
+general:
+  engine_name: engine
+  deployment:
+pager:
+  kv:
+    kv: consul
+    address: null
+  cloud:
+    storage: "aws"
+    auth_mode: "temp_token"
+    temp_token_path: "/mount/token-stage/s3-creds.json"
+    bucket: "pager"
+    prefix: ""
+dbcache:
+observability:
+  tracing: datadog
+  log-format: json
+  span-threshold-sec: 0.1
+  default-tracing-verbosity: 0
+  default-log-verbosity: 1
+parallelism:
+  leaf-nodes: null
+  leaf-nodes-lookup: null
+  parallel-min-num-parts: null
+  single-machine-fan-out: 4

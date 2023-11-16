@@ -1,21 +1,68 @@
-# One yaml file for the two RAI containers, run as a single service:
-# The RAI Engine Server:
+# One yaml file for the five RAI containers, run as a single service:
 spec:
   container:
+  # telemetry config
+  - name: dd-agent
+    image: /<db>/<schema>/cashapp_repository/dd-agent:7.38.1
+    env:
+      DD_TAGS: env:spcs-cashapp
+      DD_ENV: spcs-cashapp
+      DD_HOSTNAME: app.snowflake.com
+      DD_APM_ENABLED: true
+      DD_USE_DOGSTATSD: true
+      DD_LOGS_ENABLED: true
+      DD_LOGS_CONFIG_USE_HTTP: true
+    volumeMounts:
+    - name: dd-config
+      mountPath: /etc/datadog-agent/conf.d/engine.d
+    - name: logs
+      mountPath: /mount/logs
+    secrets:
+      - snowflakeSecret: dd_api_key
+        secretKeyRef: password 
+        envVarName: DD_API_KEY
+  # Support for the RAI Engine:
+  - name: consul
+    image: /<db>/<schema>/cashapp_repository/consul:amd-1.16
+    args: ["agent", "-server", "-bootstrap", "-ui", "-client=0.0.0.0", "-data-dir", "/consul-data/consul/data"]
+    volumeMounts:
+    - name: consul-mount
+      mountPath: /consul-data/
+  # enables direct s3 access on SF stages
+  - name: token-svc
+    image: /<db>/<schema>/cashapp_repository/snowflake-helper:release
+    command: ["/token-updater"]
+    volumeMounts:
+      - name: token-stage
+        mountPath: /sts-token
+    env:
+      STAGENAME: "rai_yaml_stage"
+# The RAI Engine Server:
   - name: rai-server
-    image: xxxxx-xxxxx-snowservices.registry.snowflakecomputing.com/rai_repository/rai-server:release
+    image: /<db>/<schema>/cashapp_repository/rai-server:latest
+    args: [
+      "bash","-c",
+      "rai-server server --config-file /mount/shared-stage/engineconfig.yaml 2>&1 | tee -a /mount/logs/engine.log",
+      ]
     env:
       SERVER_PORT: 8010
       JULIA_NUM_THREADS: 5
+      CONSUL_ADDRESS: http://rai-service:8500
+    volumeMounts:
+      - name: shared-stage
+        mountPath: /mount/shared-stage
+      - name: token-stage
+        mountPath: /mount/token-stage
+      - name: logs
+        mountPath: /mount/logs
 # --------
 # The Proxy Server:
 # The proxy must know the name of the RAI engine/server service
 # The Snowflake account info, including the warehouse, is needed for SF->RAI data copy to work
   - name: rai-proxy
-    image: xxxxx-xxxxx-snowservices.registry.snowflakecomputing.com/rai_repository/rai-proxy:release
+    image:  /<db>/<schema>/cashapp_repository/rai-proxy:latest
     env:
        ENGINE: localhost:8010
-       SNOWFLAKE_ACCOUNT: XXXXXXX
        SNOWFLAKE_DATABASE: DEMO_DATABASE
        SNOWFLAKE_SCHEMA: TPCDS
        SNOWFLAKE_ROLE: DEMO_ROLE
@@ -28,4 +75,25 @@ spec:
     - name: serverendpoint
       port: 8010
       public: false
-
+    - name: consul
+      port: 8500
+      public: false
+  volumes:
+    - name: token-stage
+      source: '@rai_yaml_stage/token'
+      uid: 1000
+      gid: 1000
+    - name: shared-stage
+      source: '@rai_yaml_stage/config'
+      uid: 1000
+      gid: 1000
+    - name: consul-mount
+      source: '@rai_yaml_stage/consul'
+      uid: 100
+      gid: 1000
+    - name: dd-config
+      source: "@rai_yaml_stage/datadog"
+      uid: 1000
+      gid: 1000
+    - name: logs
+      source: local
