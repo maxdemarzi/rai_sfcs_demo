@@ -16,7 +16,7 @@ Edit `rai_service_spec.yaml` file by changing the locations of the rai-server an
 	<db>/<schema>/rai_repository/consul:amd-1.16
 	<db>/<schema>/rai_repository/dd-agent:7.38.1
 	
-Edit one_time/add_yaml_file.sql by replacing the physical location of the yaml files:
+Edit `one_time/add_yaml_file.sql` by replacing the physical location of the yaml files:
 
 	put file:///Users/max/demo/rai_service_spec.yaml
 	put file:///Users/max/demo/engineconfig.yaml
