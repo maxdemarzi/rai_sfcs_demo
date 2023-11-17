@@ -114,7 +114,7 @@ RETURNS VARCHAR
 LANGUAGE SQL
 AS
 $$
-    SELECT 's3://'||$1:BucketName||'/'||$1:Prefix||'/'||$relative_path
+    SELECT 's3://'||$1:BucketName||'/'||$1:Prefix||'/'||relative_path
     FROM @rai_yaml_stage/token/s3-creds.json (file_format => 'json')
     LIMIT 1
 $$;
