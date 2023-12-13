@@ -18,6 +18,7 @@ observability:
   span-threshold-sec: 0.1
   default-tracing-verbosity: 0
   default-log-verbosity: 1
+  log-julia-llvm-opt-profiling: false
 parallelism:
   leaf-nodes: null
   leaf-nodes-lookup: null
