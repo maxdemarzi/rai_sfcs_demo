@@ -42,7 +42,7 @@ spec:
     image: /<db>/<schema>/cashapp_repository/rai-server:latest
     args: [
       "bash","-c",
-      "rai-server server --config-file /mount/shared-stage/engineconfig.yaml 2>&1 | tee -a /mount/logs/engine.log",
+      "rai-server server --log-julia-llvm-opt-profiling=false --config-file /mount/shared-stage/engineconfig.yaml 2>&1 | tee -a /mount/logs/engine.log",
       ]
     env:
       SERVER_PORT: 8010
