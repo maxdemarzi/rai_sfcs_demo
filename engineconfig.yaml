@@ -1,6 +1,7 @@
 general:
   engine_name: engine
   deployment:
+  concurrency-limit-before-backoff-error: 1
 pager:
   kv:
     kv: consul
