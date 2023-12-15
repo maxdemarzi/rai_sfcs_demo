@@ -46,7 +46,7 @@ spec:
       ]
     env:
       SERVER_PORT: 8010
-      JULIA_NUM_THREADS: 5
+      JULIA_NUM_THREADS: 32,2
       CONSUL_ADDRESS: http://rai-service:8500
     volumeMounts:
       - name: shared-stage
