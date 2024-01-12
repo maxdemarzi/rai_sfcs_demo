@@ -22,9 +22,9 @@ spec:
         secretKeyRef: password 
         envVarName: DD_API_KEY
   # Support for the RAI Engine:
-  - name: consul
+- name: consul
     image: /<db>/<schema>/cashapp_repository/consul:amd-1.16
-    args: ["agent", "-server", "-bootstrap", "-ui", "-client=0.0.0.0", "-data-dir", "/consul-data/consul/data"]
+    args: ["agent", "-server", "-bootstrap", "-ui", "-client=127.0.0.1", "-bind=127.0.0.1", "-data-dir", "/consul-data/consul/data"]
     volumeMounts:
     - name: consul-mount
       mountPath: /consul-data/
